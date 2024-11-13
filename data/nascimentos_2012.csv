@@ -1,0 +1,45 @@
+ Nascidos vivos - Brasil
+Nascim p/resid.mãe por Unidade da Federação
+Período:2012
+"Unidade da Federação";"Nascim_p/resid.mãe"
+"11 Rondônia";26513
+"12 Acre";16700
+"13 Amazonas";77434
+"14 Roraima";10601
+"15 Pará";137837
+"16 Amapá";14895
+"17 Tocantins";24395
+"21 Maranhão";116039
+"22 Piauí";47962
+"23 Ceará";126868
+"24 Rio Grande do Norte";46993
+"25 Paraíba";56770
+"26 Pernambuco";141382
+"27 Alagoas";52510
+"28 Sergipe";34108
+"29 Bahia";209999
+"31 Minas Gerais";260544
+"32 Espírito Santo";52835
+"33 Rio de Janeiro";222859
+"35 São Paulo";616608
+"41 Paraná";153945
+"42 Santa Catarina";88772
+"43 Rio Grande do Sul";138941
+"50 Mato Grosso do Sul";42252
+"51 Mato Grosso";51256
+"52 Goiás";93274
+"53 Distrito Federal";43497
+"Total";2905789
+ Fonte: MS/SVSA/CGIAE - Sistema de Informações sobre Nascidos Vivos - SINASC
+ Notas:
+ 
+ Dados finais disponíveis até 2022 e preliminares referentes a 2023. Data da atualização dos dados 08/2024.
+ Em 2011, houve uma mudança no conteúdo da Declaração de Nascidos Vivos, com maior detalhamento das informações coletadas. Para este ano, foram
+ utilizados simultaneamente os dois formulários. Para mais detalhes sobre as mudanças ocorridas e os seus efeitos, veja o documento
+ "Consolidação do Sistema de Informações sobre Nascidos Vivos - 2011".
+ 
+ * A categorização da "Adequação quantitativa de pré-natal" mostrada na variável "Adeq quant pré-natal" considera o início do
+ pré-natal no primeiro trimestre e um mínimo de seis consultas de pré-natal –, sendo gravada em campo chamado Kotelchuck no
+ arquivo disponível para download, calculado a partir dos campos “33 – Número de consultas pré-natal” (Mesprenat) e “34 – Mês de gestação em que iniciou o pré-natal” (Consprenat).
+ Maiores informações no documento "Saúde Brasil 2017: uma análise da situação de saúde e os desafios para o alcance dos Objetivos de Desenvolvi
+ 

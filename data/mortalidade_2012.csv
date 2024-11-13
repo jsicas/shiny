@@ -1,0 +1,42 @@
+ Mortalidade - Brasil
+Óbitos p/Residênc por Unidade da Federação
+Período:2012
+"Unidade da Federação";"Óbitos_p/Residênc"
+"11 Rondônia";7602
+"12 Acre";3293
+"13 Amazonas";14847
+"14 Roraima";1783
+"15 Pará";33898
+"16 Amapá";2601
+"17 Tocantins";6642
+"21 Maranhão";28838
+"22 Piauí";17449
+"23 Ceará";48712
+"24 Rio Grande do Norte";17923
+"25 Paraíba";25168
+"26 Pernambuco";57132
+"27 Alagoas";18376
+"28 Sergipe";11837
+"29 Bahia";80311
+"31 Minas Gerais";125074
+"32 Espírito Santo";21616
+"33 Rio de Janeiro";126261
+"35 São Paulo";270432
+"41 Paraná";68637
+"42 Santa Catarina";35435
+"43 Rio Grande do Sul";79456
+"50 Mato Grosso do Sul";14634
+"51 Mato Grosso";15901
+"52 Goiás";36000
+"53 Distrito Federal";11308
+"Total";1181166
+ Fonte: MS/SVS/CGIAE - Sistema de Informações sobre Mortalidade - SIM
+ Notas:
+ 
+ Dados finais disponíveis até 2022 e preliminares referentes a 2023. Data da atualização dos dados 08/2024.
+ Em 2011, houve uma mudança no conteúdo da Declaração de Óbito, com maior detalhamento das informações coletadas. Para este ano, foram
+ utilizados simultaneamente os dois formulários. Para mais detalhes sobre as mudanças ocorridas e os seus efeitos, veja o documento
+ "Sistema de Informações sobre Mortalidade - SIM. Consolidação da base de dados de 2011".
+ No dia 13/06/2019, os arquivos do SIM referentes ao ano de notificação 2017 foram atualizados, com alteração das causas básicas de 2 registros e exclusão de 1 registro.
+ No dia 01/04/2020, os arquivos do SIM referentes ao ano de notificação 2019 foram atualizados, com alteração das causas básicas de 4 registros e exclusão de 1 registro.
+ 

@@ -1,13 +1,14 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
-
+# packages
 library(shiny)
+library(geobr)
+
+# leitura parcial dos dados
+mortalidade <- read.csv2('data/mortalidade_2012.csv', skip=4, header=F,
+                         col.names=c('estado', 'obitos'), nrows=27)
+
+# lendo estados
+states <- read_state(year=2010, showProgress=F, simplified=F)
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
