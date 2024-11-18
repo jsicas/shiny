@@ -41,13 +41,11 @@ no_axis <- theme(axis.title=element_blank(),
                  axis.ticks=element_blank()) + 
   theme_void()
 
-
-states |>
+if (input == 'All') a <- 1:5 else a <- input
+states |> filter(code_region %in% a) |>
   ggplot() +
   geom_sf(fill='#2D3E50', color='#FEBF57', size=.15, show.legend=F) +
   no_axis
-
-
 
 
 
