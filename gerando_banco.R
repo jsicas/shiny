@@ -2,9 +2,6 @@ require(dplyr)
 require(tidyr)
 require(ggplot2)
 require(geobr)
-require(sf)
-require(geojsonio)
-require(plotly)
 
 
 # leitura parcial dos dados
