@@ -1,47 +1,70 @@
 library(shiny)
+library(shinyjs)
 
 ui <- fluidPage(
-  titlePanel("Botão na Parte Inferior"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      style = "display: flex; flex-direction: column; height: 100vh;",  # Configuração de layout
-      fileInput("file", "Carregar Arquivo Personalizado", accept = ".csv"),
-      div(style = "margin-top: auto;",  # Empurra o botão para o final
-          actionButton("load_file", "Carregar Arquivo Padrão")
-      )
-    ),
-    mainPanel(
-      tableOutput("contents")  # Exibe os dados
-    )
-  )
+  useShinyjs(), # Necessário para manipulação dinâmica
+  tags$head(tags$style(HTML("
+ @keyframes fillAndFade {
+  0% {
+    background-size: 0% 100%;
+    opacity: 1;
+  }
+  80% {
+    background-size: 100% 100%;
+    opacity: 1;
+  }
+  100% {
+    background-size: 100% 100%;
+    opacity: 0;
+  }
+}
+
+.flash-fill {
+  background: red;
+  background-size: 0% 100%;
+  height: 6px; /* Altura da barra */
+  animation: fillAndFade 7s forwards;
+}
+  "))),
+  actionButton("load_file", "Carregar Arquivo CSV"),
+  hidden(fileInput("file", "Escolha um arquivo CSV", accept = c(".csv")))
 )
 
-server <- function(input, output) {
-  # Reativo para armazenar os dados carregados
-  dados <- reactiveVal()
-  
-  # Carregar o arquivo pré-definido ao clicar no botão
+server <- function(input, output, session) {
   observeEvent(input$load_file, {
-    arquivo_padrao <- "caminho/do/seu/arquivo.csv"  # Insira o caminho do arquivo aqui
-    if (file.exists(arquivo_padrao)) {
-      dados(read.csv(arquivo_padrao))  # Lê o arquivo e atualiza os dados
-    } else {
-      showNotification("Arquivo não encontrado!", type = "error")
-    }
+    # Simula clique no fileInput
+    click("file")
   })
   
-  # Carregar arquivo personalizado quando selecionado pelo usuário
   observeEvent(input$file, {
-    req(input$file)
-    dados(read.csv(input$file$datapath))  # Lê o arquivo carregado pelo usuário
-  })
-  
-  # Renderizar os dados carregados
-  output$contents <- renderTable({
-    req(dados())  # Garante que os dados existam
-    dados()
+    # Verifica se o arquivo tem extensão .csv
+    if (tools::file_ext(input$file$name) != "csv") {
+      shinyjs::addClass("load_file", "flash-fill") # Adiciona animação
+      shinyjs::delay(2000, shinyjs::removeClass("load_file", "flash-fill")) # Remove após 2s
+    }
   })
 }
 
 shinyApp(ui, server)
+
+
+
+#' .flash-fill {
+#'   background: linear-gradient(to right, red 50%, transparent 50%);
+#'   background-size: 200% 100%;
+#'   animation: fillEffect 7s forwards;
+#' }
+#' 
+#' @keyframes fillEffect {
+#'   0% {
+#'     background-position: 100% 0;
+#'   }
+#'   50% {
+#'     background-position: 0 0;
+#'   }
+#'   100% {
+#'     background-position: 100% 0;
+#'   }
+#' }
+
+
