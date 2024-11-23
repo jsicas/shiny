@@ -2,7 +2,10 @@ require(dplyr)
 require(tidyr)
 require(ggplot2)
 require(geobr)
+require(readr)
 
+# lendo estados
+states <- read_state(year=2010, showProgress=F, simplified=T)
 
 # leitura parcial dos dados
 doses <- read.csv2('data/dosesAplicadas_2012.csv', nrows=27, skip=1, header=F,
@@ -30,13 +33,19 @@ db <- doses %>%
   left_join(natalidade, by='code_state') |>
   left_join(pop, by='code_state')
 
+db$code_region <- states$code_region 
+
+db <- db[,c('code_region', 'code_state', 'name_state', 'natalidade', 'doses_aplicadas',
+       'pop_residente', 'obitos')]
+
+db_teste <- db[,c('code_region', 'code_state', 'name_state', 'natalidade', 'obitos')]
+
 write.csv(db, 'data/banco_de_dados.csv', row.names=F)
-write_tsv(db, 'data/banco_de_dados2.tsv')
+write.csv(db_teste, 'data/banco_exemplo.csv', row.names=F)
+write_tsv(db, 'data/banco_nao_csv.tsv')
 
 
-# lendo estados
-states <- read_state(year=2010, showProgress=F, simplified=T)
-
+# graficos
 no_axis <- theme_void() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),

@@ -6,6 +6,7 @@ library(dplyr)
 library(bslib)
 library(DT)
 library(shinyjs)
+library(rsconnect)
 
 
 # carregando mapa para poupar tempo
@@ -20,7 +21,7 @@ ui <- page_sidebar(
   tags$head(     # Animações do botão de carregar arquivo
     tags$style(HTML('
       #load_file {
-        transition: background-color 3s ease-out;
+        transition: background-color 1.75s ease-out;
       }
       
       #load_file.flash-fill1 {
@@ -59,8 +60,7 @@ ui <- page_sidebar(
       ),
     ),
     div(style = 'display: flex; flex-direction: column; margin-top: auto;',  # Empurra o botão para o final
-        actionButton('load_file', 'Carregar Arquivo CSV'),
-        br(),
+        actionButton('load_file', 'Carregar Arquivo CSV', style = 'margin-bottom: 20px;'),
         actionButton('load_exemplo', 'Carregar Exemplo'),
         hidden(fileInput('file', 'Escolha um arquivo CSV', accept = c('.csv'),
                          buttonLabel = 'Selecionar Arquivo',
@@ -120,7 +120,7 @@ server <- function(input, output, session) {
       showNotification('Arquivo não foi importanto. Por favor, selecione um arquivo CSV.',
                        type='error', duration=7)
       addClass(selector = '#load_file', class = 'flash-fill1')
-      delay(7000, {
+      delay(2500, {
         removeClass(selector = '#load_file', class = 'flash-fill1')
       })
     } else {
@@ -128,7 +128,7 @@ server <- function(input, output, session) {
       showNotification('Arquivo importanto com sucesso.',
                        type='message', duration=7)
       addClass(selector = '#load_file', class = 'flash-fill2')
-      delay(7000, {
+      delay(2500, {
         removeClass(selector = '#load_file', class = 'flash-fill2')
       })
     }
@@ -136,7 +136,8 @@ server <- function(input, output, session) {
   
   output$tabela <- renderDT({
     req(dados())  # Garante que dados() não seja NULL
-    datatable(dados(), options = list(
+    dados() |> filter(code_region %in% a()) |>
+    datatable(options = list(
       pageLength = 5, # número inicial de entradas exibidas
       lengthMenu = c(5, 10, 15, 20, 27) # opções para o usuário
     ))

@@ -13,8 +13,8 @@ Recursos:
   pessoa);
 - tabela inicial (generalizar valores por meio do YAML)
 - Gráfico de mapa;
-- Precisa ter uma coluna com o código do estado chamada `code_state`
-  (generalizar por meio do YAML);
+- Precisa ter uma coluna com o código do estado chamada `code_state` e
+  `code_region` (generalizar por meio do YAML);
 - Leitura de um banco de dados em csv (colocar aviso caso o banco não
   seja csv);
 - Banco exemplo, para o primeiro uso
