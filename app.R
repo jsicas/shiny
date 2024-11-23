@@ -17,6 +17,33 @@ ui <- page_sidebar(
   # configurações
   theme = bs_theme(bootswatch = 'darkly'),  # tema
   useShinyjs(),  # js
+  tags$head(     # Animações do botão de carregar arquivo
+    tags$style(HTML('
+      #load_file {
+        transition: background-color 3s ease-out;
+      }
+      
+      #load_file.flash-fill1 {
+        background-color: red;
+      }
+      
+      #load_file.flash-fill2 {
+        background-color: #00BC8C;
+      }
+      
+      .shiny-notification-message {
+        font-size: 19px;
+        background-color: #00BC8C;
+        color:#FFFFF3;
+      }
+      
+      .shiny-notification-error {
+        font-size: 19px;
+        background-color: red;
+        color:#FFFFF3;
+      }
+    '))
+  ),
   
   # titulo
   titlePanel('Brasil por Estado e Regiões'),  
@@ -32,9 +59,8 @@ ui <- page_sidebar(
       ),
     ),
     div(style = 'display: flex; flex-direction: column; margin-top: auto;',  # Empurra o botão para o final
-        textOutput('mensagem_erro'),
-        tags$style('#mensagem_erro {color: red}'),
-        actionButton('load_file', 'Carregar Arquivo CSV'), br(),
+        actionButton('load_file', 'Carregar Arquivo CSV'),
+        br(),
         actionButton('load_exemplo', 'Carregar Exemplo'),
         hidden(fileInput('file', 'Escolha um arquivo CSV', accept = c('.csv'),
                          buttonLabel = 'Selecionar Arquivo',
@@ -58,7 +84,6 @@ server <- function(input, output, session) {
   })
   
   dados <- reactiveVal(NULL)  # variável reativa
-  mensagem_erro <- reactiveVal(NULL)  # variável reativa para a mensagem de erro
   
   # Carregar os dados exemplo
   observeEvent(input$load_exemplo, {
@@ -92,18 +117,21 @@ server <- function(input, output, session) {
   # efetivamente carregar o arquivo
   observeEvent(input$file, {
     if (tools::file_ext(input$file$name) != 'csv') {
-      mensagem_erro('O arquivo selecionado não é um CSV. Por favor, selecione um arquivo CSV válido.')
-      shinyjs::show('mensagem_erro')  # Exibe a mensagem de erro
-      shinyjs::delay(7000, shinyjs::hide('mensagem_erro'))
+      showNotification('Arquivo não foi importanto. Por favor, selecione um arquivo CSV.',
+                       type='error', duration=7)
+      addClass(selector = '#load_file', class = 'flash-fill1')
+      delay(7000, {
+        removeClass(selector = '#load_file', class = 'flash-fill1')
+      })
     } else {
       dados(read.csv(input$file$datapath))
-      mensagem_erro(NULL)
-      shinyjs::hide('mensagem_erro')
+      showNotification('Arquivo importanto com sucesso.',
+                       type='message', duration=7)
+      addClass(selector = '#load_file', class = 'flash-fill2')
+      delay(7000, {
+        removeClass(selector = '#load_file', class = 'flash-fill2')
+      })
     }
-  })
-  
-  output$mensagem_erro <- renderText({
-    mensagem_erro()
   })
   
   output$tabela <- renderDT({
@@ -113,7 +141,6 @@ server <- function(input, output, session) {
       lengthMenu = c(5, 10, 15, 20, 27) # opções para o usuário
     ))
   })
-  
   
   output$mapa <- renderPlot({
     states |> filter(code_region %in% a()) |>

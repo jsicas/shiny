@@ -3,8 +3,14 @@
 
 Recursos:
 
-- Falar que o mapa já foi pre-carregado, deixando seu arquivo no
-  projeto, já que instalá-lo demorava alguns segundos;
+- Falar que o mapa já foi pre-carregado (pasta `./grafico/`), deixando
+  seu arquivo no projeto, já que instalá-lo demorava alguns segundos;
+- pasta `./data/` apresenta 3 bancos de dados `banco_exemplo.csv` (é ele
+  que é carregado ao apertar no botão `carregar exemplo`),
+  `banco_não_csv.tsv` (banco utilziado para validar o que ocorre ao
+  tentar carregar aquivo que não é csv) e `banco_de_dados.csv` (uma
+  alternativa de banco de dados, como se fosse o banco de dados da
+  pessoa);
 - tabela inicial (generalizar valores por meio do YAML)
 - Gráfico de mapa;
 - Precisa ter uma coluna com o código do estado chamada `code_state`
@@ -17,6 +23,7 @@ Recursos:
 - Quando já há dados carregados e aperta-se para carregar os dados do
   exemplo, aparece uma caixa de dialogo pergutnando ao usuários se ele
   quer sobrescrever os dados;
-- Com a tentativa de carregar dados que não são csv aparece uma mensagem
-  perto do botão carregar CSV avisando que o banco não é valido em
-  vermelho
+- ao tentar carregar dados, se for CSV o botão pisca verde e aparece uma
+  confirmação, se não for csv o botão pisca vermelho e aparece um aviso;
+- Não esquecer de excluir a pasta `./testes/`;
+- Colocar url para acessar o shiny desenvolvido pelo shiny app;

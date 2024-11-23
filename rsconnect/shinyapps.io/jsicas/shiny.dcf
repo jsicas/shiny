@@ -1,0 +1,10 @@
+name: shiny
+title:
+username: jsicas
+account: jsicas
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13432215
+bundleId: 9406558
+url: https://jsicas.shinyapps.io/shiny/
+version: 1
