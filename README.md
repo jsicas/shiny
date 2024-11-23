@@ -26,4 +26,5 @@ Recursos:
 - ao tentar carregar dados, se for CSV o botão pisca verde e aparece uma
   confirmação, se não for csv o botão pisca vermelho e aparece um aviso;
 - Não esquecer de excluir a pasta `./testes/`;
-- Colocar url para acessar o shiny desenvolvido pelo shiny app;
+- Colocar url para acessar o shiny desenvolvido pelo shiny app
+  (<https://jsicas.shinyapps.io/shiny/>);
