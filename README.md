@@ -28,3 +28,8 @@ Recursos:
 - Não esquecer de excluir a pasta `./testes/`;
 - Colocar url para acessar o shiny desenvolvido pelo shiny app
   (<https://jsicas.shinyapps.io/shiny/>);
+- `./configuracoes/` tem dois arquivos `config.yaml` responsável por
+  passar algumas configurações adicionais, como colunas a serem
+  ignoradas no selectInput e `configuracoes_iniciais.R` que carrega
+  todos os pacotes necessários, lê o arquivo de configurações e
+  pre-carrega os mapas para gerar o gráfico de mapa mais rápido.

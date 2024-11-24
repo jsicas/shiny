@@ -1,18 +1,5 @@
-# packages
-library(shiny)
-library(geobr)
-library(ggplot2)
-library(dplyr)
-library(bslib)
-library(DT)
-library(shinyjs)
-library(rsconnect)
-
-
-# carregando mapa para poupar tempo
-states <- readRDS('grafico/states.RDS')
-
 # Adicionar source
+source('configuracoes/configuracoes_iniciais.R')
 
 ui <- page_sidebar(
   # configurações
@@ -51,13 +38,15 @@ ui <- page_sidebar(
   
   sidebar = sidebar(
     style = 'display: flex; flex-direction: column; height: 100vh;',  # Config layout
-    radioButtons(
-      'regiao',
-      'Região:',
-      c(
-        'Todos' = 0, 'Norte' = 1, 'Nordeste' = 2,
-        'Centro Oeste' = 5, 'Sudeste' = 3, 'Sul' = 4
-      ),
+    card(card_header('Configurações'),
+         radioButtons(
+           'regiao',
+           label = 'Região:',
+           c(
+             'Todas' = 0, 'Norte' = 1, 'Nordeste' = 2, 'Centro Oeste' = 5,
+             'Sudeste' = 3, 'Sul' = 4
+           )
+         )
     ),
     div(style = 'display: flex; flex-direction: column; margin-top: auto;',  # Empurra o botão para o final
         actionButton('load_file', 'Carregar Arquivo CSV', style = 'margin-bottom: 20px;'),
@@ -74,7 +63,35 @@ ui <- page_sidebar(
                                accept = c('.csv'))),
               DTOutput(outputId = 'tabela')
     ),
-    nav_panel('Mapa', plotOutput(outputId = 'mapa'))
+    nav_panel('Análise',
+              fluidRow(
+                column(9, plotOutput(outputId = 'grafico_analise')),
+                column(3,
+                       card(card_header('Configurações'),
+                            selectInput('variavel', 'Selecione uma Variável:', choices=NULL,
+                                        selectize = FALSE),
+                            selectInput('tipo_grafico', 'Tipo do Gráfico:',
+                                        choices=c('Histograma', 'Boxplot'),
+                                        selectize = FALSE),
+                            downloadButton('download_grafico', 'Baixar Gráfico',
+                                           style = 'margin-top: 30px;'),
+                       )
+                )
+              )
+    ),
+    nav_panel('Mapa',
+              fluidRow(
+                column(9, plotOutput(outputId = 'mapa')),
+                column(3, 
+                       card(card_header('Configurações'),
+                            selectInput('variavel_mapa', 'Selecione uma Variável:',
+                                        choices=NULL, selectize = FALSE),
+                            downloadButton('download_mapa', 'Baixar Gráfico',
+                                           style = 'margin-top: 30px;'),
+                       ),
+                )
+              )
+    )
   )
 )
 
@@ -84,6 +101,46 @@ server <- function(input, output, session) {
   })
   
   dados <- reactiveVal(NULL)  # variável reativa
+  
+  tema <- theme(panel.background = element_rect(fill='#2d2d2d'),
+                plot.background = element_rect(fill='#2d2d2d', color='transparent'),
+                # axis.title = element_text('white'),
+                axis.title.x = element_text(color = 'white', size = 18),
+                axis.text.x = element_text(color = 'white', size=14),
+                axis.title.y = element_text(color = 'white', size = 18),
+                axis.text.y = element_text(color = 'white', size=14)
+  )
+  
+  grafico_analise <- reactive(
+    switch(input$tipo_grafico,
+           'Histograma' = dados() |> filter(code_region %in% a()) |>
+             ggplot(aes(x = !!sym(input$variavel))) +
+             geom_histogram(fill='turquoise') +
+             labs(y = 'Contagem') +
+             tema,
+           'Boxplot' = dados() |>
+             ggplot(aes(x = !!sym(input$variavel))) +
+             geom_boxplot(col='darkgreen', fill='darkturquoise') +
+             tema +
+             theme(axis.text.y = element_blank())
+    )
+  )
+  
+  mapa <- reactive(
+    states |> filter(code_region %in% a()) |>
+      left_join(dados()[c(config$code_state,setdiff(names(dados), names(states)))],
+                by=config$code_state) |>
+      ggplot() +
+      geom_sf(fill=ifelse(length(a()) == 5,
+                          rep(c('#408f70', '#fe0000', '#e6ec16', '#9091c9', '#ff8c4d'),
+                              c(7, 9, 4, 3, 4)),
+                          c('#408f70', '#fe0000', '#e6ec16', '#9091c9', '#ff8c4d')[a()]),
+              color='gray10', size=.15, show.legend=F) +
+      # geom_sf_label(size=3.5, alpha=0.55) +
+      theme_void()
+    # theme(plot.background = element_rect(fill='#2d2d2d', color='transparent'),
+    #       panel.background = element_rect(fill='#2d2d2d', color='transparent'))
+  )
   
   # Carregar os dados exemplo
   observeEvent(input$load_exemplo, {
@@ -100,13 +157,21 @@ server <- function(input, output, session) {
       ))
     } else {
       # se não tiver dados, carrega exemplo
-      dados(read.csv('data/banco_exemplo.csv'))  # Atualiza os dados reativos
+      dados(read.csv('data/banco_exemplo.csv'))  # atualiza os dados reativos
+      updateSelectInput(inputId = 'variavel',  # atualiza variaveis 
+                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+      updateSelectInput(inputId = 'variavel_mapa',  # atualiza variaveis 
+                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
     }
   })
   
   observeEvent(input$confirmar_exemplo, {
     removeModal()
     dados(read.csv('data/banco_exemplo.csv'))
+    updateSelectInput(inputId = 'variavel',  # atualiza variaveis 
+                      choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+    updateSelectInput(inputId = 'variavel_mapa',  # atualiza variaveis 
+                      choices = names(dados())[!(names(dados()) %in% config$ignorar)])
   })
   
   # escolher arquivo para carregar
@@ -125,6 +190,10 @@ server <- function(input, output, session) {
       })
     } else {
       dados(read.csv(input$file$datapath))
+      updateSelectInput(inputId = 'variavel',  # atualiza variaveis 
+                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+      updateSelectInput(inputId = 'variavel_mapa',  # atualiza variaveis 
+                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
       showNotification('Arquivo importanto com sucesso.',
                        type='message', duration=7)
       addClass(selector = '#load_file', class = 'flash-fill2')
@@ -137,20 +206,44 @@ server <- function(input, output, session) {
   output$tabela <- renderDT({
     req(dados())  # Garante que dados() não seja NULL
     dados() |> filter(code_region %in% a()) |>
-    datatable(options = list(
-      pageLength = 5, # número inicial de entradas exibidas
-      lengthMenu = c(5, 10, 15, 20, 27) # opções para o usuário
-    ))
+      datatable(options = list(
+        pageLength = 5, # número inicial de entradas exibidas
+        lengthMenu = c(5, 10, 15, 20, 27) # opções para o usuário
+      ))
+  })
+  # aes(label=paste0(abbrev_state, ': ', qtd_state, '\n', qtd_state_percent, '%'))
+  output$mapa <- renderPlot({
+    req(dados())
+    mapa()
   })
   
-  output$mapa <- renderPlot({
-    states |> filter(code_region %in% a()) |>
-      ggplot() +
-      geom_sf(fill='#2D3E50', color='#FEBF57', size=.15, show.legend=F) +
-      theme_void() 
-    # theme(plot.background = element_rect(fill='#2d2d2d', color='transparent'),
-    #       panel.background = element_rect(fill='#2d2d2d', color='transparent'))
+  output$grafico_analise <- renderPlot({
+    req(dados())
+    req(grafico_analise())
+    grafico_analise()
   })
+  
+  output$download_grafico <- downloadHandler(
+    filename = function() {
+      paste0('grafico_', input$tipo_grafico, '.pdf')
+    },
+    content = function(file) {
+      pdf(file=file)
+      plot(grafico_analise())
+      dev.off()
+    }
+  )
+  
+  output$download_mapa <- downloadHandler(
+    filename = function() {
+      paste0('mapa_', input$regiao, '.pdf')
+    },
+    content = function(file) {
+      pdf(file=file)
+      plot(mapa())
+      dev.off()
+    }
+  )
   
 }
 

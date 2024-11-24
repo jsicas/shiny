@@ -6,6 +6,7 @@ require(readr)
 
 # lendo estados
 states <- read_state(year=2010, showProgress=F, simplified=T)
+saveRDS(states, 'grafico/states.RDS')
 
 # leitura parcial dos dados
 doses <- read.csv2('data/dosesAplicadas_2012.csv', nrows=27, skip=1, header=F,
@@ -32,6 +33,8 @@ db <- doses %>%
   left_join(mortalidade, by='code_state') |> 
   left_join(natalidade, by='code_state') |>
   left_join(pop, by='code_state')
+
+db$name_state <- str_to_title(db$name_state)
 
 db$code_region <- states$code_region 
 
