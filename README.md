@@ -33,3 +33,5 @@ Recursos:
   ignoradas no selectInput e `configuracoes_iniciais.R` que carrega
   todos os pacotes necessários, lê o arquivo de configurações e
   pre-carrega os mapas para gerar o gráfico de mapa mais rápido.
+- no arquivo yaml deve ser passado qual coluna tem a informação do
+  código do estado, padrão é code_state;
