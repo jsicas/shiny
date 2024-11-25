@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
 
 Recursos:
 
-- Falar que o mapa já foi pre-carregado (pasta `./grafico/`), deixando seu arquivo no projeto, já que instalá-lo demorava alguns segundos;
 - pasta `./data/` apresenta 3 bancos de dados `banco_exemplo.csv` (é ele que é carregado ao apertar no botão `carregar exemplo`), `banco_não_csv.tsv` (banco utilziado para validar o que ocorre ao tentar carregar aquivo que não é csv) e `banco_de_dados.csv` (uma alternativa de banco de dados, como se fosse o banco de dados da pessoa);
 - tabela inicial (generalizar valores por meio do YAML)
 - Gráfico de mapa;
@@ -49,20 +48,19 @@ O mapa do Brasil foi pré-carregado através do pacote `geobr` e armazenado na p
 
 ### **Configurações Personalizáveis**
 
-- O nome das colunas obrigatórias (`code_state` e `code_region`) pode ser alterado no arquivo `config.yaml`, localizado na pasta `./configuracoes`.
+- O nome das colunas obrigatórias (`code_state` e `code_region`) podem ser alterado no arquivo `config.yaml`, localizado na pasta `./configuracoes`.
 - Colunas adicionais que não sejam relevantes para as análises podem ser ignoradas ao serem listadas no mesmo arquivo `config.yaml`.
 
 ### **Bancos de Dados de Exemplo**
 
-Três bancos de dados são disponibilizados na pasta `./data`:
-1. **`banco_exemplo.csv`**:
-   - Carregado ao clicar no botão `Carregar exemplo`.
-2. **`banco_nao_csv.tsv`**:
-   - Pode ser usado para testar a validação de arquivos não compatíveis.
-3. **`banco_de_dados.csv`**:
-   - Simula um banco de dados alternativo para uso do usuário.
+Quatro bancos de dados são disponibilizados na pasta `./data`:
 
-> Nota: As abas da aplicação só serão exibidas após o carregamento bem-sucedido de um banco de dados.
+1. **`banco_exemplo.csv`**: Carregado ao clicar no botão `Carregar exemplo`.
+2. **`banco_nao_csv.tsv`**: Pode ser usado para testar a validação de arquivos não compatíveis.
+3. **`banco_de_dados.csv`**: Simula um banco de dados alternativo para uso do usuário.
+4. **`banco_teste_code_region.csv`**: Usado para testar a mudança de nome da variável `code_state` para `code`, com a devida atualização feita no arquivo `./configuracoes/config.yaml`.
+
+> Nota: Os gráficos e tabela da aplicação só serão exibidas após o carregamento bem-sucedido de um banco de dados.
 
 ## **Visualização**
 
@@ -73,20 +71,20 @@ A aplicação oferece diferentes formas de visualização dos dados carregados:
 - Exibe todas as variáveis do banco de dados carregado.
 - Funcionalidades:
   - Ordenação e busca.
-  - Ocultação de observações.
+  - Ocultação de observações com base no estado.
 
 ### **2. Gráfica**
 
 - Permite visualizar distribuições e padrões das variáveis através de dois tipos de gráficos:
   - **Histograma**: Distribuição de frequência de uma variável numérica.
   - **Boxplot**: Resumo estatístico de uma variável.
-- Os gráficos podem ser baixados utilizando o botão `Baixar gráfico`.
+- Os gráficos podem ser baixados em formato PDF utilizando o botão `Baixar Gráfico`.
 
 ### **3. Geográfica**
 
-- Apresenta um mapa do Brasil com a variável selecionada aplicada aos estados.
-- As cores no mapa refletem os valores das variáveis por estado.
-- O mapa gerado pode ser baixado utilizando o botão `Baixar gráfico`.
+- Apresenta um mapa do Brasil mostrando a variável selecionada.
+- É possível selecionar apenas um estado para visualização.
+- O mapa gerado pode ser baixado em formato PDF utilizando o botão `Baixar Gráfico`.
 
 ## **Filtragem**
 
@@ -104,7 +102,7 @@ A aplicação oferece diferentes formas de visualização dos dados carregados:
   - Arquivos inválidos:
     - Botão pisca **vermelho** e uma mensagem de erro é exibida.
 - **Confirmação para Sobrescrita**:
-  - Ao tentar carregar o exemplo sobre dados já carregados, uma mensagem de confirmação é exibida.
+  - Ao tentar carregar o banco de dados exemplo sobre dados já carregados, uma mensagem de confirmação é exibida.
 
 
 ## **Acesso**

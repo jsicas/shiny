@@ -1,6 +1,6 @@
 ignorar:
-  - code_region
-  - code_state
   - name_state
   
 code_state: code_state
+
+code_region: code_region

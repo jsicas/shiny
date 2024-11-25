@@ -129,7 +129,6 @@ server <- function(input, output, session) {
     )
   )
   
-  
   cores <- c(
     '1' = '#408f70',    # Norte
     '2' = '#fe0000',    # Nordeste
@@ -142,20 +141,16 @@ server <- function(input, output, session) {
     dados_filtrados <- states %>%
       filter(code_region %in% a())
     
-    # Se não houver estados após o filtro, retorna NULL
-    if (nrow(dados_filtrados) == 0) {
-      return(NULL)
-    }
-    
     # Criar uma coluna de cores para os estados
     dados_filtrados$cor <- as.factor(dados_filtrados$code_region)
     
-    
-    dados_filtrados <- left_join(dados_filtrados, dados(), by=c('code_state'))
+    dados_filtrados <- left_join(dados_filtrados, dados(),
+                                 by=join_by('code_state' == !!sym(config$code_state)))
     
     ggplot(data = dados_filtrados) +
       geom_sf(aes(fill = cor), color = 'gray10', size = 0.15, show.legend = FALSE) +
-      geom_sf_label(aes(label = paste0(abbrev_state, ': ', get(input$variavel_mapa))), size = 3.5, alpha = 0.55) +
+      geom_sf_label(aes(label = paste0(abbrev_state, ': ', get(input$variavel_mapa))),
+                    size = 3.5, alpha = 0.55) +
       theme_void() +
       scale_fill_manual(
         values = cores,
@@ -180,9 +175,13 @@ server <- function(input, output, session) {
       # se não tiver dados, carrega exemplo
       dados(read.csv('data/banco_exemplo.csv'))  # atualiza os dados reativos
       updateSelectInput(inputId = 'variavel',  # atualiza variaveis 
-                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+                        choices = names(dados())[!(names(dados()) %in% c(config$ignorar,
+                                                                         config$code_state,
+                                                                         config$code_region))])
       updateSelectInput(inputId = 'variavel_mapa',  # atualiza variaveis 
-                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+                        choices = names(dados())[!(names(dados()) %in% c(config$ignorar,
+                                                                         config$code_state,
+                                                                         config$code_region))])
     }
   })
   
@@ -190,9 +189,13 @@ server <- function(input, output, session) {
     removeModal()
     dados(read.csv('data/banco_exemplo.csv'))
     updateSelectInput(inputId = 'variavel',  # atualiza variaveis 
-                      choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+                      choices = names(dados())[!(names(dados()) %in% c(config$ignorar,
+                                                                       config$code_state,
+                                                                       config$code_region))])
     updateSelectInput(inputId = 'variavel_mapa',  # atualiza variaveis 
-                      choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+                      choices = names(dados())[!(names(dados()) %in% c(config$ignorar,
+                                                                       config$code_state,
+                                                                       config$code_region))])
   })
   
   # escolher arquivo para carregar
@@ -212,9 +215,13 @@ server <- function(input, output, session) {
     } else {
       dados(read.csv(input$file$datapath))
       updateSelectInput(inputId = 'variavel',  # atualiza variaveis 
-                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+                        choices = names(dados())[!(names(dados()) %in% c(config$ignorar,
+                                                                         config$code_state,
+                                                                         config$code_region))])
       updateSelectInput(inputId = 'variavel_mapa',  # atualiza variaveis 
-                        choices = names(dados())[!(names(dados()) %in% config$ignorar)])
+                        choices = names(dados())[!(names(dados()) %in% c(config$ignorar,
+                                                                         config$code_state,
+                                                                         config$code_region))])
       showNotification('Arquivo importanto com sucesso.',
                        type='message', duration=7)
       addClass(selector = '#load_file', class = 'flash-fill2')
@@ -226,7 +233,7 @@ server <- function(input, output, session) {
   
   output$tabela <- renderDT({
     req(dados())  # Garante que dados() não seja NULL
-    dados() |> filter(code_region %in% a()) |>
+    dados() |> filter(!!sym(config$code_region) %in% a()) |>
       datatable(options = list(
         pageLength = 5, # número inicial de entradas exibidas
         lengthMenu = c(5, 10, 15, 20, 27) # opções para o usuário
@@ -265,7 +272,6 @@ server <- function(input, output, session) {
       dev.off()
     }
   )
-  
 }
 
 shinyApp(ui = ui, server = server)
