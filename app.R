@@ -165,6 +165,9 @@ server <- function(input, output, session) {
       geom_sf(aes(fill = cor), color = 'gray10', size = 0.15, show.legend = FALSE) +
       geom_sf_label(aes(label = paste0(abbrev_state, ': ', get(input$variavel_mapa))), size = 3.5, alpha = 0.55) +
       theme_void() +
+      scale_fill_manual(
+        values = cores,
+        breaks = names(cores)) +
       theme(plot.title = element_text(hjust = 0.5))
     
 
