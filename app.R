@@ -126,15 +126,15 @@ server <- function(input, output, session) {
     )
   )
   
-
-cores <- c(
+  
+  cores <- c(
     '1' = '#408f70',    # Norte
     '2' = '#fe0000',    # Nordeste
     '3' = '#9091c9',    # Sudeste
     '4' = '#ff8c4d',    # Sul
     '5' = '#e6ec16'     # Centro-Oeste
-)
-
+  )
+  
   mapa <- reactive({
     regiao_selecionada <- a()  #
     
@@ -152,29 +152,31 @@ cores <- c(
     # Criar uma coluna de cores para os estados
     dados_filtrados$cor <- as.factor(dados_filtrados$code_region)
     
-    ggplot(data = dados_filtrados) +
-      geom_sf(aes(fill = cor), color = "gray10", size = 0.15) +
-      scale_fill_manual(
-        values = cores,
-        breaks = names(cores)
-      ) +
-      theme_void() +
-      theme(
-        legend.position = "none"  #
-      )
+    dados_filtrados <- left_join(dados_filtrados, dados(), by=c('code_state'))
+    
+    # ggplot(aes(label=paste0(abbrev_state, ': ', qtd_state, '\n', qtd_state_percent, '%'))) +
+    #   geom_sf(fill=rep(c('#408f70', '#fe0000', '#e6ec16', '#9091c9', '#ff8c4d'),
+    #                    c(7, 9, 4, 3, 4)), color='gray10', size=.15, show.legend=FALSE) +
+    #   geom_sf_label(size=3.5, alpha=0.55) +
+    #   theme_void() +
+    #   theme(plot.title=element_text(hjust=0.5))
+    
+    ggplot(data = dados_filtrados,
+           aes(
+             label=abbrev_state,
+             # color = 'gray10',
+             size = 0.15)) +
+      geom_sf(fill = cor, show.legend=FALSE) +
+      geom_sf_label(size=3.5, alpha=0.55)
+    # scale_fill_manual(
+    #   values = cores,
+    #   breaks = names(cores)
+    # ) +
+    # theme_void()
+    # theme(legend.position = 'none')
+    # theme(plot.background = element_rect(fill='transparent', color='transparent'),
+    #       panel.background = element_rect(fill='transparent', color='transparent')) +
   })
-  
-
-
-
-
-
-
-
-
-
-
-
   
   # Carregar os dados exemplo
   observeEvent(input$load_exemplo, {
