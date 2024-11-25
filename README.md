@@ -42,13 +42,12 @@ Recursos:
 
 A aplicação `nome` foi desenvolvida utilizando o framework Shiny, com o objetivo de realizar a análise e visualização de dados relacionados às unidades federativas brasileiras. Ela permite que o usuário carregue seus próprios bancos de dados e visualize as informações através de tabelas, gráficos e mapas interativos. Além disso, a aplicação oferece funcionalidades de filtragem por região e seleção de variáveis, aplicadas a todas as visualizações de forma integrada.
 
----
+
 
 ## **Mapa**
 
 O mapa do Brasil foi pré-carregado através do pacote `geobr` e armazenado na pasta `./grafico` para otimizar o tempo de inicialização da aplicação, uma vez que a instalação do pacote pode ser demorada. Esse pré-carregamento permite que a geração de mapas seja rápida e eficiente, mesmo em ambientes com restrições de desempenho.
 
----
 
 ## **Configurações**
 
@@ -74,7 +73,6 @@ Três bancos de dados são disponibilizados na pasta `./data`:
 
 > **Nota**: As abas da aplicação só serão exibidas após o carregamento bem-sucedido de um banco de dados.
 
----
 
 ## **Visualização**
 
@@ -97,7 +95,7 @@ A aplicação oferece diferentes formas de visualização dos dados carregados:
 - As cores no mapa refletem os valores das variáveis por estado.
 - O mapa gerado pode ser baixado utilizando o botão `Baixar gráfico`.
 
----
+
 
 ## **Filtragem**
 
@@ -106,7 +104,6 @@ A aplicação oferece diferentes formas de visualização dos dados carregados:
   - **Norte**, **Nordeste**, **Centro-Oeste**, **Sudeste** e **Sul**.
 - A filtragem afeta todas as visualizações: tabela, gráficos e mapa.
 
----
 
 ## **Funcionalidades Adicionais**
 
@@ -118,7 +115,6 @@ A aplicação oferece diferentes formas de visualização dos dados carregados:
 - **Confirmação para Sobrescrita**:
   - Ao tentar carregar o exemplo sobre dados já carregados, uma mensagem de confirmação é exibida.
 
----
 
 ## **Acesso**
 A aplicação está disponível no ShinyApps.io no seguinte link:
