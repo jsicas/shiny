@@ -152,6 +152,7 @@ server <- function(input, output, session) {
     # Criar uma coluna de cores para os estados
     dados_filtrados$cor <- as.factor(dados_filtrados$code_region)
     
+    
     dados_filtrados <- left_join(dados_filtrados, dados(), by=c('code_state'))
     
     # ggplot(aes(label=paste0(abbrev_state, ': ', qtd_state, '\n', qtd_state_percent, '%'))) +
@@ -160,14 +161,13 @@ server <- function(input, output, session) {
     #   geom_sf_label(size=3.5, alpha=0.55) +
     #   theme_void() +
     #   theme(plot.title=element_text(hjust=0.5))
+    ggplot(data = dados_filtrados) +
+      geom_sf(aes(fill = cor), color = 'gray10', size = 0.15, show.legend = FALSE) +
+      geom_sf_label(aes(label = paste0(abbrev_state, ': ', get(input$variavel_mapa))), size = 3.5, alpha = 0.55) +
+      theme_void() +
+      theme(plot.title = element_text(hjust = 0.5))
     
-    ggplot(data = dados_filtrados,
-           aes(
-             label=abbrev_state,
-             # color = 'gray10',
-             size = 0.15)) +
-      geom_sf(fill = cor, show.legend=FALSE) +
-      geom_sf_label(size=3.5, alpha=0.55)
+
     # scale_fill_manual(
     #   values = cores,
     #   breaks = names(cores)
