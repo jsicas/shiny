@@ -5,6 +5,6 @@ account: jsicas
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13432215
-bundleId: 9406612
+bundleId: 9414787
 url: https://jsicas.shinyapps.io/shiny/
 version: 1

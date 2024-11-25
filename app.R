@@ -102,27 +102,30 @@ server <- function(input, output, session) {
   
   dados <- reactiveVal(NULL)  # variável reativa
   
-  tema <- theme(panel.background = element_rect(fill='#2d2d2d'),
-                plot.background = element_rect(fill='#2d2d2d', color='transparent'),
-                # axis.title = element_text('white'),
-                axis.title.x = element_text(color = 'white', size = 18),
-                axis.text.x = element_text(color = 'white', size=14),
-                axis.title.y = element_text(color = 'white', size = 18),
-                axis.text.y = element_text(color = 'white', size=14)
-  )
+  tema <- theme_minimal() +
+    theme(panel.background = element_rect(fill='#2d2d2d'),
+          plot.background = element_rect(fill='#2d2d2d', color='transparent'),
+          # axis.title = element_text('white'),
+          axis.title.x = element_text(color = 'white', size = 18),
+          axis.text.x = element_text(color = 'white', size=14),
+          axis.title.y = element_text(color = 'white', size = 18),
+          axis.text.y = element_text(color = 'white', size=14)
+    )
   
   grafico_analise <- reactive(
     switch(input$tipo_grafico,
            'Histograma' = dados() |> filter(code_region %in% a()) |>
              ggplot(aes(x = !!sym(input$variavel))) +
-             geom_histogram(fill='turquoise') +
+             geom_histogram(col='black', fill='turquoise') +
              labs(y = 'Contagem') +
              tema,
            'Boxplot' = dados() |>
              ggplot(aes(x = !!sym(input$variavel))) +
-             geom_boxplot(col='darkgreen', fill='darkturquoise') +
+             geom_boxplot(col='white', fill='darkturquoise') +
              tema +
-             theme(axis.text.y = element_blank())
+             theme(axis.text.y = element_blank(),
+                   panel.grid.major.y = element_blank(),
+                   panel.grid.minor.y = element_blank())
     )
   )
   
@@ -136,13 +139,8 @@ server <- function(input, output, session) {
   )
   
   mapa <- reactive({
-    regiao_selecionada <- a()  #
-    
-    if (length(regiao_selecionada) == 0) {
-      return(NULL)
-    }
     dados_filtrados <- states %>%
-      filter(code_region %in% regiao_selecionada)
+      filter(code_region %in% a())
     
     # Se não houver estados após o filtro, retorna NULL
     if (nrow(dados_filtrados) == 0) {
@@ -155,12 +153,6 @@ server <- function(input, output, session) {
     
     dados_filtrados <- left_join(dados_filtrados, dados(), by=c('code_state'))
     
-    # ggplot(aes(label=paste0(abbrev_state, ': ', qtd_state, '\n', qtd_state_percent, '%'))) +
-    #   geom_sf(fill=rep(c('#408f70', '#fe0000', '#e6ec16', '#9091c9', '#ff8c4d'),
-    #                    c(7, 9, 4, 3, 4)), color='gray10', size=.15, show.legend=FALSE) +
-    #   geom_sf_label(size=3.5, alpha=0.55) +
-    #   theme_void() +
-    #   theme(plot.title=element_text(hjust=0.5))
     ggplot(data = dados_filtrados) +
       geom_sf(aes(fill = cor), color = 'gray10', size = 0.15, show.legend = FALSE) +
       geom_sf_label(aes(label = paste0(abbrev_state, ': ', get(input$variavel_mapa))), size = 3.5, alpha = 0.55) +
@@ -169,16 +161,6 @@ server <- function(input, output, session) {
         values = cores,
         breaks = names(cores)) +
       theme(plot.title = element_text(hjust = 0.5))
-    
-
-    # scale_fill_manual(
-    #   values = cores,
-    #   breaks = names(cores)
-    # ) +
-    # theme_void()
-    # theme(legend.position = 'none')
-    # theme(plot.background = element_rect(fill='transparent', color='transparent'),
-    #       panel.background = element_rect(fill='transparent', color='transparent')) +
   })
   
   # Carregar os dados exemplo
