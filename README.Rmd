@@ -27,3 +27,42 @@ Recursos:
 - Colocar url para acessar o shiny desenvolvido pelo shiny app (https://jsicas.shinyapps.io/shiny/);
 - `./configuracoes/` tem dois arquivos `config.yaml` responsável por passar algumas configurações adicionais, como colunas a serem ignoradas no selectInput e `configuracoes_iniciais.R` que carrega todos os pacotes necessários, lê o arquivo de configurações e pre-carrega os mapas para gerar o gráfico de mapa mais rápido. 
 - no arquivo yaml deve ser passado qual coluna tem a informação do código do estado, padrão é code_state;
+
+# Introdução
+
+A aplicação `nome` desenvolvida com shiny tem por objetivo a análise e visualização de dados relacionados as unidades federativas brasileiras, permitindo-as em bancos de dados pessoais, graças a ferramentas de configuração disponibilizadas. A aplicação oferece opção de carregamento dos dados, visualização de tabelas, gráficos e o mapa do Brasil, além da filtragem e seleção de variáveis aplicadas a todas as visualizações.
+
+## Mapa
+
+O mapa do Brasil foi pré-carregado através do pacote `geobr` dentro da pasta `./grafico`, já vez que sua instalação não é breve.
+
+## Configurações
+
+Uma vez que a aplicação permite o upload de um banco de dados, é necessário que o banco de dados seja um csv (receberá um aviso caso não seja) com apenas variáveis numéricas, e para além das variáveis de interesse, deve possuir duas colunas nomeadas que são indispensáveis para o funcionamento da aplicação: `code_state` e `code_region` com o código oficial do estado brasileiro e sua região, respectivamente. Apesar da necessidade do conteúdo das colunas, os nomes das duas colunas podem ser alterados a partir do arquivo YAML na pasta `./configuracoes`, e você pode também ignorar colunas não numéricas no upload através dele, que deve seguir o formato do exemplo
+
+exemplo
+
+Três bancos de dados são disponibilizados na pasta `./data`, o exemplo `banco_exemplo.csv` é o carregado ao clicar no botão `Carregar exemplo` dentro do produto; o banco `banco_não_csv.tsv` pode ser utilizado para validar a mensagem de aviso de banco não csv, e finalmente o `banco_de_dados` pode ser usado para simular um banco de dados do usuário. As abas só estarão visíveis quando um banco de dados for carregado.
+
+## Visualização
+
+A aplicação conta com diferentes tipos de visualiações
+
+### Tabular
+
+A tabela com os dados carregados que possui todas as variáveis do banco, permitindo ordenação e busca e ocultação de observações
+
+### Gráfica
+
+Dois tipos de gráficos (histograma e boxplot) que permitem analisar a distribuição de alguma variável selecionada do modelo. O download do conteúdo é disponibilizado através do botão `Baixar gráfico`.
+
+### Geográfica
+
+Um mapa do Brasil que possibilita a inspeção espacial da variável selecionada nos estados brasileiros. O download do conteúdo é disponibilizado através do botão `Baixar gráfico`.
+
+
+## Filtragem
+
+A filtragem dos dados é realizada por regiões, através dos botões de opção. Quando filtrados, a visualização é alterada na tabela, gráficos e mapa.
+
+
