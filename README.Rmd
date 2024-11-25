@@ -1,4 +1,5 @@
 ---
+title: "README - Aplicação Shiny: Brasil por Estado e Regiões"
 output: github_document
 ---
 
@@ -28,41 +29,88 @@ Recursos:
 - `./configuracoes/` tem dois arquivos `config.yaml` responsável por passar algumas configurações adicionais, como colunas a serem ignoradas no selectInput e `configuracoes_iniciais.R` que carrega todos os pacotes necessários, lê o arquivo de configurações e pre-carrega os mapas para gerar o gráfico de mapa mais rápido. 
 - no arquivo yaml deve ser passado qual coluna tem a informação do código do estado, padrão é code_state;
 
-# Introdução
+# **Introdução**
 
-A aplicação `nome` desenvolvida com shiny tem por objetivo a análise e visualização de dados relacionados as unidades federativas brasileiras, permitindo-as em bancos de dados pessoais, graças a ferramentas de configuração disponibilizadas. A aplicação oferece opção de carregamento dos dados, visualização de tabelas, gráficos e o mapa do Brasil, além da filtragem e seleção de variáveis aplicadas a todas as visualizações.
+A aplicação `nome` foi desenvolvida utilizando o framework Shiny, com o objetivo de realizar a análise e visualização de dados relacionados às unidades federativas brasileiras. Ela permite que o usuário carregue seus próprios bancos de dados e visualize as informações através de tabelas, gráficos e mapas interativos. Além disso, a aplicação oferece funcionalidades de filtragem por região e seleção de variáveis, aplicadas a todas as visualizações de forma integrada.
 
-## Mapa
+## **Mapa**
 
-O mapa do Brasil foi pré-carregado através do pacote `geobr` dentro da pasta `./grafico`, já vez que sua instalação não é breve.
+O mapa do Brasil foi pré-carregado através do pacote `geobr` e armazenado na pasta `./grafico` para otimizar o tempo de inicialização da aplicação, uma vez que a instalação do pacote pode ser demorada. Esse pré-carregamento permite que a geração de mapas seja rápida e eficiente, mesmo em ambientes com restrições de desempenho.
 
-## Configurações
+## **Configurações**
 
-Uma vez que a aplicação permite o upload de um banco de dados, é necessário que o banco de dados seja um csv (receberá um aviso caso não seja) com apenas variáveis numéricas, e para além das variáveis de interesse, deve possuir duas colunas nomeadas que são indispensáveis para o funcionamento da aplicação: `code_state` e `code_region` com o código oficial do estado brasileiro e sua região, respectivamente. Apesar da necessidade do conteúdo das colunas, os nomes das duas colunas podem ser alterados a partir do arquivo YAML na pasta `./configuracoes`, e você pode também ignorar colunas não numéricas no upload através dele, que deve seguir o formato do exemplo
+### **Requisitos para o Banco de Dados**
 
-exemplo
+- A aplicação permite o **upload de arquivos no formato CSV**. Caso o arquivo enviado não seja um CSV, uma mensagem de erro será exibida.
+- O banco de dados deve conter **apenas variáveis numéricas** para as análises.
+- Duas colunas são obrigatórias para o funcionamento correto da aplicação:
+  - `code_state`: Código oficial do estado brasileiro (IBGE).
+  - `code_region`: Código que identifica a região à qual o estado pertence.
 
-Três bancos de dados são disponibilizados na pasta `./data`, o exemplo `banco_exemplo.csv` é o carregado ao clicar no botão `Carregar exemplo` dentro do produto; o banco `banco_não_csv.tsv` pode ser utilizado para validar a mensagem de aviso de banco não csv, e finalmente o `banco_de_dados` pode ser usado para simular um banco de dados do usuário. As abas só estarão visíveis quando um banco de dados for carregado.
+### **Configurações Personalizáveis**
 
-## Visualização
+- O nome das colunas obrigatórias (`code_state` e `code_region`) pode ser alterado no arquivo `config.yaml`, localizado na pasta `./configuracoes`.
+- Colunas adicionais que não sejam relevantes para as análises podem ser ignoradas ao serem listadas no mesmo arquivo `config.yaml`.
 
-A aplicação conta com diferentes tipos de visualiações
+### **Bancos de Dados de Exemplo**
 
-### Tabular
+Três bancos de dados são disponibilizados na pasta `./data`:
+1. **`banco_exemplo.csv`**:
+   - Carregado ao clicar no botão `Carregar exemplo`.
+2. **`banco_nao_csv.tsv`**:
+   - Pode ser usado para testar a validação de arquivos não compatíveis.
+3. **`banco_de_dados.csv`**:
+   - Simula um banco de dados alternativo para uso do usuário.
 
-A tabela com os dados carregados que possui todas as variáveis do banco, permitindo ordenação e busca e ocultação de observações
+> Nota: As abas da aplicação só serão exibidas após o carregamento bem-sucedido de um banco de dados.
 
-### Gráfica
+## **Visualização**
 
-Dois tipos de gráficos (histograma e boxplot) que permitem analisar a distribuição de alguma variável selecionada do modelo. O download do conteúdo é disponibilizado através do botão `Baixar gráfico`.
+A aplicação oferece diferentes formas de visualização dos dados carregados:
 
-### Geográfica
+### **1. Tabela**
 
-Um mapa do Brasil que possibilita a inspeção espacial da variável selecionada nos estados brasileiros. O download do conteúdo é disponibilizado através do botão `Baixar gráfico`.
+- Exibe todas as variáveis do banco de dados carregado.
+- Funcionalidades:
+  - Ordenação e busca.
+  - Ocultação de observações.
+
+### **2. Gráfica**
+
+- Permite visualizar distribuições e padrões das variáveis através de dois tipos de gráficos:
+  - **Histograma**: Distribuição de frequência de uma variável numérica.
+  - **Boxplot**: Resumo estatístico de uma variável.
+- Os gráficos podem ser baixados utilizando o botão `Baixar gráfico`.
+
+### **3. Geográfica**
+
+- Apresenta um mapa do Brasil com a variável selecionada aplicada aos estados.
+- As cores no mapa refletem os valores das variáveis por estado.
+- O mapa gerado pode ser baixado utilizando o botão `Baixar gráfico`.
+
+## **Filtragem**
+
+- A aplicação permite filtrar os dados por região utilizando botões de opção.
+- As regiões disponíveis são:
+  - Norte, Nordeste, Centro-Oeste, Sudeste e Sul.
+- A filtragem afeta todas as visualizações: tabela, gráficos e mapa.
 
 
-## Filtragem
+## **Funcionalidades Adicionais**
 
-A filtragem dos dados é realizada por regiões, através dos botões de opção. Quando filtrados, a visualização é alterada na tabela, gráficos e mapa.
+- **Mensagens de Feedback**:
+  - Arquivos CSV válidos:
+    - Botão pisca **verde** e uma mensagem de sucesso é exibida.
+  - Arquivos inválidos:
+    - Botão pisca **vermelho** e uma mensagem de erro é exibida.
+- **Confirmação para Sobrescrita**:
+  - Ao tentar carregar o exemplo sobre dados já carregados, uma mensagem de confirmação é exibida.
+
+
+## **Acesso**
+
+A aplicação está disponível no ShinyApps.io no seguinte link:
+[https://jsicas.shinyapps.io/shiny/](https://jsicas.shinyapps.io/shiny/)
+
 
 

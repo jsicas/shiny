@@ -126,21 +126,55 @@ server <- function(input, output, session) {
     )
   )
   
-  mapa <- reactive(
-    states |> filter(code_region %in% a()) |>
-      left_join(dados()[c(config$code_state,setdiff(names(dados), names(states)))],
-                by=config$code_state) |>
-      ggplot() +
-      geom_sf(fill=ifelse(length(a()) == 5,
-                          rep(c('#408f70', '#fe0000', '#e6ec16', '#9091c9', '#ff8c4d'),
-                              c(7, 9, 4, 3, 4)),
-                          c('#408f70', '#fe0000', '#e6ec16', '#9091c9', '#ff8c4d')[a()]),
-              color='gray10', size=.15, show.legend=F) +
-      # geom_sf_label(size=3.5, alpha=0.55) +
-      theme_void()
-    # theme(plot.background = element_rect(fill='#2d2d2d', color='transparent'),
-    #       panel.background = element_rect(fill='#2d2d2d', color='transparent'))
-  )
+
+cores <- c(
+    '1' = '#408f70',    # Norte
+    '2' = '#fe0000',    # Nordeste
+    '3' = '#9091c9',    # Sudeste
+    '4' = '#ff8c4d',    # Sul
+    '5' = '#e6ec16'     # Centro-Oeste
+)
+
+  mapa <- reactive({
+    regiao_selecionada <- a()  #
+    
+    if (length(regiao_selecionada) == 0) {
+      return(NULL)
+    }
+    dados_filtrados <- states %>%
+      filter(code_region %in% regiao_selecionada)
+    
+    # Se não houver estados após o filtro, retorna NULL
+    if (nrow(dados_filtrados) == 0) {
+      return(NULL)
+    }
+    
+    # Criar uma coluna de cores para os estados
+    dados_filtrados$cor <- as.factor(dados_filtrados$code_region)
+    
+    ggplot(data = dados_filtrados) +
+      geom_sf(aes(fill = cor), color = "gray10", size = 0.15) +
+      scale_fill_manual(
+        values = cores,
+        breaks = names(cores)
+      ) +
+      theme_void() +
+      theme(
+        legend.position = "none"  #
+      )
+  })
+  
+
+
+
+
+
+
+
+
+
+
+
   
   # Carregar os dados exemplo
   observeEvent(input$load_exemplo, {
